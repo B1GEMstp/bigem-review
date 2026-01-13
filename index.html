@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIGEM VPN Review</title>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 { color: #333; }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .loading { color: #666; }
+        .error { color: red; background-color: #ffebee; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>BIGEM VPN</h1>
+        <p>ทดสอบการเชื่อมต่อกับ Google Apps Script</p>
+        
+        <div id="result" class="status loading">
+            กำลังโหลดข้อมูลจาก Apps Script...
+        </div>
+    </div>
+
+    <script>
+        // ลิงก์ Apps Script ของคุณ
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTDwmYQjMM26VyTs7527F-s_0hqQdpMDk8jySMvAz5_RfuDQ2MGNkUjkSHw7_uoz0X/exec";
+
+        // สั่งให้ดึงข้อมูล
+        fetch(SCRIPT_URL)
+            .then(response => response.json()) // แปลงค่าที่ได้เป็น JSON
+            .then(data => {
+                // เอาข้อความที่ได้จาก Google มาแสดงแทนคำว่ากำลังโหลด
+                const output = document.getElementById('result');
+                output.innerText = data.text; // แสดงข้อความ
+                output.classList.remove('loading');
+                
+                // (แถม) แสดงเวลาที่ส่งมาจาก Server
+                output.innerHTML += "<br><small>เวลา Server: " + data.time + "</small>";
+            })
+            .catch(error => {
+                // กรณีเชื่อมต่อไม่ได้
+                document.getElementById('result').innerText = "เกิดข้อผิดพลาด! กรุณาตรวจสอบว่าตั้งค่า Deploy เป็น 'Anyone' หรือยัง?";
+                document.getElementById('result').className = "status error";
+                console.error('Error:', error);
+            });
+    </script>
+
+</body>
+</html>
